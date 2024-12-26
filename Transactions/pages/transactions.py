@@ -249,7 +249,7 @@ if uploaded_file is not None:
     st.download_button(
         label="Download Excel File",
         data=buffer,
-        file_name=f"{st.session_state.file_name}.xlsx",
+        file_name=f"{st.session_state.filename}.xlsx",
         mime="application/vnd.ms-excel",
     )
 

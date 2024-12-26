@@ -23,7 +23,7 @@ PaymentApplication = st.selectbox(
 
 PaymentCountry = st.selectbox("What Payment Status", ("All", "US", "UK", "AU"))
 
-today = datetime.now(timezone.utc)
+today = datetime.datetime.now(datetime.timezone.utc)
 days180 = date.today() - timedelta(days=180)
 
 StartDate = st.date_input("Start Date (Default 180 Days Prior)", days180)

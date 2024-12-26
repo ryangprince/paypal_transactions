@@ -27,7 +27,6 @@ if uploaded_file is not None:
 
     dfpreclean2["Day"] = pd.to_datetime(dfpreclean2["Day"])
 
-    """Change the order of the columns."""
     df = dfpreclean2.loc[
         :,
         [
@@ -42,8 +41,6 @@ if uploaded_file is not None:
         ],
     ]
 
-    """Get stats for all transactions in the data frame."""
-
     totalsum = np.sum(df["Total"])
     total_transactions = df["Type"].count()
 
@@ -51,18 +48,12 @@ if uploaded_file is not None:
     median_transaction = np.median(df["Total"])
     max_transaction = np.max(df["Total"])
 
-    """Now build out three new data frames: charges only, refund only, charge back only."""
-
     chargeonlytransactions = df[df["Type"] == "Charge"]
     refundonlytransactions = df[df["Type"] == "Refund"]
     chargebackonlytransactions = df[df["Type"] == "Chargeback"]
 
-    """Initialize date time objects for calculating last 90 days and last 180 days."""
-
     days90 = pd.to_datetime(date.today() - timedelta(days=90))
     days180 = pd.to_datetime(date.today() - timedelta(days=180))
-
-    """Perform total calculations, total, last 90 days, and last 180 days, for transaction type specific data frames."""
 
     chargetotal = np.sum(chargeonlytransactions["Total"])
     charge90days = np.sum(
@@ -110,8 +101,6 @@ if uploaded_file is not None:
     avg_transactions_count_per_customer = np.mean(pivottablenames["count_of_total"])
     avg_transactions_sum_per_customer = np.mean(pivottablenames["sum_of_total"])
 
-    """Build transaction type specific pivot tables."""
-
     pivottabletransactiontype = pd.pivot_table(
         df,
         index=["Transaction_Type"],
@@ -128,11 +117,7 @@ if uploaded_file is not None:
         pivottabletransactioncountry["Total"] / totalsum
     ).apply("{:.2%}".format)
 
-    """Test locating the transaction for Ryan."""
-
     namefinal = df[df["Customer_Name"].str.contains(firstname, case=False)]
-
-    """Looking at flagged keywords in Transaction_Notes."""
 
     payment_note = df[df["Transaction_Notes"].isna() == False]
     flagged_words = "raffle|razz|lottery"
@@ -140,21 +125,9 @@ if uploaded_file is not None:
         df["Transaction_Notes"].str.contains(flagged_words, case=False)
     ]
 
-    """Highticket: look to see if a customer has a transaction over a certain amount. Normally there a maximum amount a person can transfer, or some other limits."""
-
     highticket = df[df["Total"] >= highticketval].copy()
 
     highticket = highticket.sort_values(by="Total", ascending=False)
-
-    """Splitting transactions: sometimes when a person sends an amount over the 
-    max threshhold it will split the transactions, with one transaction happening 
-    when the transaction is initiated, and then the second part of the transaction 
-    coming in a few second/ minutes later.
-
-    Since transactions are logged daily this would show up as a single transaction in the data frame, with an amount that is above the max threshhold.
-
-    NOTE: Some of the code for this part isn't ideal, but for purposes of following along and completing the project I am keeping it as is for now. May review and update later.
-    """
 
     dup = df.copy()
 
@@ -168,8 +141,6 @@ if uploaded_file is not None:
     dup3 = dup.query(
         "(created_at_day == created_at_dayprev | created_at_day == created_at_daynext) & (Customer_Name == Customer_Name_next | Customer_Name == Customer_Name_prev)"
     )
-
-    """Put all calcuations information into a single data frame (sums, means, etc.)."""
 
     dfcalc = pd.DataFrame(
         {
@@ -232,7 +203,6 @@ if uploaded_file is not None:
     for key, value in format_mapping.items():
         dfcalc[key] = dfcalc[key].apply(value.format)
 
-    # * build out excel file
     with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
         df.to_excel(writer, sheet_name="Clean_Data")
         dfcalc.to_excel(writer, sheet_name="Calculations")

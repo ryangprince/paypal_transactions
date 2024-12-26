@@ -146,7 +146,7 @@ chart2 = (
 
 bar3 = (
     alt.Chart(df)
-    .mark_bar(extent="min-max")
+    .mark_bar()
     .encode(
         x=alt.X("int_created_date:O", title="Date"),
         y=alt.Y("sum(Total):Q", title="Total"),
@@ -172,11 +172,11 @@ chart3 = (bar3).properties(
 
 bar4 = (
     alt.Chart(df)
-    .mark_bar(extent="min-max")
+    .mark_bar()
     .encode(
         x=alt.X("int_created_date:O", title="Date"),
-        y=alt.Y("sum(Total):Q", title="Total"),
-        color=alt.Color("Type:N", titl="Payment Type"),
+        y=alt.Y("count(Total):Q", title="Count"),
+        color=alt.Color("Type:N", title="Payment Type"),
     )
 )
 

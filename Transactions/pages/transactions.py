@@ -87,8 +87,6 @@ if uploaded_file is not None:
     chargebackrate90days = refund90days / charge90days
     chargebackrate180days = refund180days / charge180days
 
-    """Pivot tables."""
-
     pivottablenames = pd.pivot_table(
         df, index=["Customer_Name"], aggfunc={"Total": np.sum, "Customer_Name": "count"}
     )

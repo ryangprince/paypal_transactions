@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import datetime
 from datetime import date, timedelta
+from datetime import timezone
 
 st.set_page_config(page_title="Charts", page_icon="📈")
 
@@ -22,7 +23,7 @@ PaymentApplication = st.selectbox(
 
 PaymentCountry = st.selectbox("What Payment Status", ("All", "US", "UK", "AU"))
 
-today = datetime.utcnow()
+today = datetime.now(timezone.utc)
 days180 = date.today() - timedelta(days=180)
 
 StartDate = st.date_input("Start Date (Default 180 Days Prior)", days180)
